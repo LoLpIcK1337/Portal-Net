@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Portal Net - File Organization</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <h1>Portal Net - File Organization</h1>
+
+    <div class="controls">
+      <div class="control-group">
+        <label for="sourceFolder">Source Folder (from where to sort):</label>
+        <input type="text" id="sourceFolder" placeholder="Select source folder">
+        <button id="selectSource">Select</button>
+      </div>
+
+      <div class="control-group">
+        <label for="baseTargetFolder">Main Destination Folder (where sorted folders will be created):</label>
+        <input type="text" id="baseTargetFolder" placeholder="Select main destination folder">
+        <button id="selectBaseTarget">Select</button>
+      </div>
+    </div>
+
+    <div class="file-types">
+      <h2>File Organization Rules</h2>
+      <p>Select which file types to organize. Files will be moved to subfolders within your main destination folder:</p>
+      <div id="fileTypeRules">
+        <!-- File type rules will be added here -->
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="sortFiles">Start Automatic Sorting</button>
+    </div>
+
+    <div class="status-area">
+      <div id="statusMessage" class="status-message"></div>
+      <div id="errorMessage" class="error-message"></div>
+    </div>
+
+    <div class="statistics">
+      <h3>Sorting Statistics</h3>
+      <div class="stats-content">
+        <div>Files sorted today: <span id="filesToday">0</span></div>
+        <div>Total files sorted: <span id="totalFiles">0</span></div>
+        <div>Last sorted file: <span id="lastFile">-</span></div>
+        <button id="showStatsDetails">Show Details</button>
+      </div>
+    </div>
+
+    <div class="settings">
+      <h3>Settings</h3>
+      <div class="theme-setting">
+        <label>
+          <input type="checkbox" id="themeToggle">
+          <span class="setting-label">Dark Theme</span>
+        </label>
+      </div>
+      <div class="auto-launch-setting">
+        <label>
+          <input type="checkbox" id="autoLaunchCheckbox">
+          <span class="setting-label">Auto-launch on startup</span>
+        </label>
+      </div>
+      <div class="sort-existing-setting">
+        <label>
+          <input type="checkbox" id="sortExistingFilesCheckbox">
+          <span class="setting-label">Sort existing files on startup</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
