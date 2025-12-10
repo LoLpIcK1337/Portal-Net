@@ -1,0 +1,36 @@
+{
+  "name": "portal-net",
+  "version": "1.0.0",
+  "description": "Portal Net - Advanced file organization system",
+  "author": "LoLpIcK1337",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "installer": "node installer.js"
+  },
+  "dependencies": {
+    "auto-launch": "^5.0.6",
+    "chokidar": "^3.5.3",
+    "electron-store": "^8.1.0"
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.6.3"
+  },
+  "build": {
+    "appId": "com.portalnet.app",
+    "productName": "Portal Net",
+    "win": {
+      "target": "nsis",
+      "icon": "logo.jpg"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Portal Net"
+    }
+  }
+}
