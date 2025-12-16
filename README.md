@@ -1,7 +1,7 @@
 # Portal Net - Advanced File Organization
 
 ## Overview
-Portal Net is a powerful file organization system that automatically sorts files into categorized folders.
+Portal Net is a powerful file organization system that automatically sorts files into categorized folders. Now featuring modular architecture and custom categories for personalized file organization rules.
 
 ## Folder Logic Explanation
 
@@ -44,6 +44,14 @@ Main Destination Folder (e.g., "E:\Portal Net Files")
 - Spreadsheets: .xls, .xlsx, .csv
 - Presentations: .ppt, .pptx
 
+### Custom Categories Management
+- **Create Personalized Rules**: Define custom file categories with your own extensions and target folders
+- **Format Management**: Add or remove file formats from existing categories
+- **Category Editing**: Modify existing categories and their associated file extensions
+- **Persistent Storage**: Custom categories are saved and restored between application sessions
+- **Flexible Organization**: Go beyond predefined categories with user-defined file organization rules
+- **UI Management**: Intuitive interface for managing all custom categories
+
 ### User Interface Features
 - **Dark/Light Theme Switching**: Choose your preferred interface theme
 - Error display for troubleshooting
@@ -76,32 +84,46 @@ npm start
 2. Select your main destination folder
 3. Choose your preferred theme (Dark/Light)
 4. Choose which file categories to organize (checkboxes)
-5. Click "Start Automatic Sorting"
-6. Files will be automatically sorted as they appear
+5. **Manage Custom Categories**: Create, edit, or remove custom file organization rules
+6. Click "Start Automatic Sorting"
+7. Files will be automatically sorted as they appear
+8. Custom categories provide personalized file organization beyond predefined categories
 
 ## Building for Production
 
-To create an installer with auto-startup option:
+To create a production build:
 ```bash
 npm run build
-node installer.js
 ```
+
+The application now uses a modular architecture with separate components for improved maintainability and organization.
 
 ## Technical Details
 
 - Built with Electron 28+
+- **Modular Architecture**: Refactored from monolithic structure into separate modules:
+  - `window-manager`: Handles window management and UI
+  - `tray-manager`: Manages system tray functionality
+  - `config-manager`: Handles configuration storage and persistence
+  - `error-handler`: Centralized error management and reporting
+  - `file-operations`: File moving and organization logic
+  - `auto-launch`: System startup integration
 - Uses chokidar for file watching
 - Configuration stored with electron-store
 - Statistics saved in localStorage
 - Cross-platform compatible
 - Theme preferences persisted
+- Custom categories configuration persisted
+- Improved code organization and maintainability
 
 ## Troubleshooting
 
 - If files aren't moving, check the error messages in the UI
 - Ensure you have write permissions for both folders
 - Check that the destination folder has enough free space
-- Verify that files match the supported extensions
+- Verify that files match the supported extensions or custom categories
 - Theme changes require application restart to take full effect
 - Application icon uses logo.jpg for both main window and system tray
-- Configuration properly handles theme, folder paths, and sortExistingFiles settings
+- Configuration properly handles theme, folder paths, sortExistingFiles, and custom categories settings
+- Custom categories are stored persistently and should survive application restarts
+- For issues with custom categories, check the category format and target folder paths

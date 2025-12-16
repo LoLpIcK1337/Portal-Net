@@ -31,6 +31,56 @@
       </div>
     </div>
 
+    <div class="custom-categories">
+      <h2>Custom Categories Management</h2>
+      <p class="help-text">Create custom categories to organize files that don't fit into standard categories. Each category can contain multiple file formats and will create a dedicated folder for sorted files.</p>
+      
+      <div class="add-category-section">
+        <h3>Add New Category</h3>
+        <div class="help-box">
+          <h4>How to add formats:</h4>
+          <ul>
+            <li>Use individual input fields below to add one format at a time</li>
+            <li>Formats should start with a dot (e.g., <code>.js</code>, <code>.py</code>)</li>
+            <li>Click "Add Format" to add it to the list</li>
+            <li>Remove formats by clicking the × button next to each format</li>
+          </ul>
+        </div>
+        
+        <div class="category-input-group">
+          <div class="input-field">
+            <label for="newCategoryName">Category Name:</label>
+            <input type="text" id="newCategoryName" placeholder="e.g., Code Files">
+          </div>
+          
+          <div class="input-field">
+            <label for="newCategoryFolder">Target Folder Name:</label>
+            <input type="text" id="newCategoryFolder" placeholder="e.g., Code">
+          </div>
+          
+          <div class="input-field formats-input">
+            <label>File Formats:</label>
+            <div class="format-add-section">
+              <input type="text" id="formatInput" placeholder=".js" maxlength="10">
+              <button type="button" id="addFormatBtn" class="add-format-btn">Add Format</button>
+            </div>
+            <div class="formats-list" id="formatsList">
+              <!-- Added formats will appear here -->
+            </div>
+          </div>
+          
+          <button id="addCategoryBtn" class="create-category-btn">Create Category</button>
+        </div>
+      </div>
+
+      <div class="existing-categories-section">
+        <h3>Your Custom Categories</h3>
+        <div id="customCategoriesList">
+          <!-- Custom categories will be listed here -->
+        </div>
+      </div>
+    </div>
+
     <div class="actions">
       <button id="sortFiles">Start Automatic Sorting</button>
     </div>

@@ -1,0 +1,92 @@
+const { Tray, Menu } = require('electron')
+const path = require('path')
+
+/**
+ * Tray Manager Module
+ * Handles system tray icon, context menu, and interactions
+ */
+
+let tray = null
+
+/**
+ * Creates the system tray icon and context menu
+ * Provides quick access to main app functions from system tray
+ */
+function createTray() {
+  try {
+    const iconPath = path.join(__dirname, 'logo.jpg')
+    tray = new Tray(iconPath)
+
+    const contextMenu = Menu.buildFromTemplate([
+      {
+        label: 'Show',
+        click: () => {
+          const { showMainWindow } = require('./window-manager')
+          showMainWindow()
+        }
+      },
+      {
+        label: 'Hide',
+        click: () => {
+          const { hideMainWindow } = require('./window-manager')
+          hideMainWindow()
+        }
+      },
+      {
+        label: 'Exit',
+        click: () => {
+          const { app } = require('electron')
+          app.quitting = true
+          app.quit()
+        }
+      }
+    ])
+
+    tray.setToolTip('File Sorter')
+    tray.setContextMenu(contextMenu)
+
+    // Handle tray click - toggle window visibility
+    tray.on('click', () => {
+      const { isWindowVisible, showMainWindow, hideMainWindow } = require('./window-manager')
+      isWindowVisible() ? hideMainWindow() : showMainWindow()
+    })
+  } catch (error) {
+    const { handleError } = require('./error-handler')
+    handleError(error, 'Tray Creation')
+  }
+}
+
+/**
+ * Gets the tray instance
+ * @returns {Tray|null} The tray instance
+ */
+function getTray() {
+  return tray
+}
+
+/**
+ * Updates the tray tooltip
+ * @param {string} tooltip The new tooltip text
+ */
+function setTrayTooltip(tooltip) {
+  if (tray) {
+    tray.setToolTip(tooltip)
+  }
+}
+
+/**
+ * Updates the tray context menu
+ * @param {Menu} menu The new menu template
+ */
+function setTrayMenu(menu) {
+  if (tray) {
+    tray.setContextMenu(menu)
+  }
+}
+
+module.exports = {
+  createTray,
+  getTray,
+  setTrayTooltip,
+  setTrayMenu
+}
