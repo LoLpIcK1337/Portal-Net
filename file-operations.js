@@ -119,6 +119,10 @@ function sortFile(filePath, config) {
         matchingRule.targetFolder
       console.log(`Moved ${fileName} to ${targetName}`)
 
+      // Show Windows notification
+      const { showNotification } = require('./main')
+      showNotification('File Moved', `Moved ${fileName} to ${targetName}`)
+
       // Send notification to renderer
       const { getMainWindow } = require('./window-manager')
       const mainWindow = getMainWindow()
@@ -133,6 +137,10 @@ function sortFile(filePath, config) {
     } catch (error) {
       const { handleError } = require('./error-handler')
       handleError(error, `File Sorting (${fileName})`)
+
+      // Show Windows notification for error
+      const { showNotification } = require('./main')
+      showNotification('File Move Error', `Failed to move ${fileName}: ${error.message}`)
     }
   }
 }

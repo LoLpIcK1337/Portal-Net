@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Set up event listeners for all UI controls
   document.getElementById('selectSource').addEventListener('click', selectSourceFolder)
   document.getElementById('selectBaseTarget').addEventListener('click', selectBaseTargetFolder)
-  document.getElementById('sortFiles').addEventListener('click', sortFiles)
+  document.getElementById('enableSorting').addEventListener('change', toggleSorting)
   document.getElementById('autoLaunchCheckbox').addEventListener('change', toggleAutoLaunch)
   document.getElementById('showStatsDetails').addEventListener('click', showStatisticsDetails)
   document.getElementById('themeToggle').addEventListener('change', toggleTheme)
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize with pre-defined file type categories and rules
   initializeFileTypeRules()
-
+  
   // Set up file sorting notifications from main process
   setupFileSortingNotifications()
 
@@ -190,12 +190,13 @@ function removeFileTypeRule(ruleId) {
   }
 }
 
-function sortFiles() {
-  // Get current configuration from UI and send to main process for file sorting
+function toggleSorting() {
+  const checkbox = document.getElementById('enableSorting')
   const config = getCurrentConfiguration()
   if (config) {
+    config.sortingEnabled = checkbox.checked
     window.electronAPI.setConfig(config)
-    showStatusMessage('Automatic file sorting started!')
+    showStatusMessage(`Automatic file sorting ${checkbox.checked ? 'enabled' : 'disabled'}!`)
   }
 }
 
@@ -232,7 +233,8 @@ function getCurrentConfiguration() {
     baseTargetFolder,
     fileRules,
     sortExistingFiles: document.getElementById('sortExistingFilesCheckbox').checked,
-    customCategories: loadCustomCategories()
+    customCategories: loadCustomCategories(),
+    sortingEnabled: document.getElementById('enableSorting').checked
   }
 }
 
@@ -284,6 +286,7 @@ function showStatusMessage(message, isError = false) {
   const errorElement = document.getElementById('errorMessage')
 
   if (isError) {
+    alert('Error: ' + message)
     errorElement.textContent = 'ERROR: ' + message
     statusElement.textContent = ''
   } else {
@@ -502,6 +505,11 @@ function loadConfiguration() {
       // Update sort existing files checkbox
       if (config.sortExistingFiles !== undefined) {
         document.getElementById('sortExistingFilesCheckbox').checked = config.sortExistingFiles
+      }
+
+      // Update sorting enabled checkbox
+      if (config.sortingEnabled !== undefined) {
+        document.getElementById('enableSorting').checked = config.sortingEnabled
       }
     }
   })
@@ -847,7 +855,7 @@ function addFormatToCategory(categoryId) {
 window.selectSourceFolder = selectSourceFolder
 window.selectBaseTargetFolder = selectBaseTargetFolder
 window.selectTargetSubfolder = selectTargetSubfolder
-window.sortFiles = sortFiles
+window.toggleSorting = toggleSorting
 window.toggleCategoryEnabled = toggleCategoryEnabled
 window.editCategory = editCategory
 window.saveCategoryEdit = saveCategoryEdit

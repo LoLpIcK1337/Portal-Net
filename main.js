@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog, Notification } = require('electron')
 const path = require('path')
 
 // Import all modules
@@ -9,6 +9,22 @@ const { handleError } = require('./error-handler')
 const { startFileWatcher } = require('./file-operations')
 const { initializeAutoLaunch, setupAutoLaunchIPC } = require('./auto-launch')
 
+/**
+ * Shows a Windows notification
+ * @param {string} title Notification title
+ * @param {string} body Notification body
+ */
+function showNotification(title, body) {
+  if (Notification.isSupported()) {
+    const notification = new Notification({
+      title: title,
+      body: body,
+      icon: path.join(__dirname, 'logo.jpg')
+    })
+    notification.show()
+  }
+}
+
 // Global application state
 let currentConfig = {
   sourceFolder: '',
@@ -16,7 +32,8 @@ let currentConfig = {
   fileRules: [],
   sortExistingFiles: false,
   theme: 'light',
-  customCategories: []
+  customCategories: [],
+  sortingEnabled: false
 }
 
 /**
@@ -66,10 +83,18 @@ function setupIPCHandlers() {
       ...config,
       theme: config.theme || currentConfig.theme || 'light',
       sortExistingFiles: config.sortExistingFiles !== undefined ? config.sortExistingFiles : currentConfig.sortExistingFiles || false,
-      customCategories: config.customCategories || currentConfig.customCategories || []
+      customCategories: config.customCategories || currentConfig.customCategories || [],
+      sortingEnabled: config.sortingEnabled !== undefined ? config.sortingEnabled : currentConfig.sortingEnabled || false
     }
     saveConfigToStore(currentConfig)
-    startFileWatcher(currentConfig)
+
+    // Start or stop file watcher based on sortingEnabled
+    if (currentConfig.sortingEnabled) {
+      startFileWatcher(currentConfig)
+    } else {
+      const { stopFileWatcher } = require('./file-operations')
+      stopFileWatcher()
+    }
   })
 
   ipcMain.handle('get-config', () => {
@@ -77,7 +102,8 @@ function setupIPCHandlers() {
       ...currentConfig,
       theme: currentConfig.theme || 'light',
       sortExistingFiles: currentConfig.sortExistingFiles || false,
-      customCategories: currentConfig.customCategories || []
+      customCategories: currentConfig.customCategories || [],
+      sortingEnabled: currentConfig.sortingEnabled || false
     }
   })
 
@@ -108,7 +134,11 @@ function setupIPCHandlers() {
       // Update current config and save it
       currentConfig = importedConfig
       saveConfigToStore(currentConfig)
-      startFileWatcher(currentConfig)
+
+      // Start file watcher if sorting is enabled
+      if (currentConfig.sortingEnabled) {
+        startFileWatcher(currentConfig)
+      }
     }
     return importedConfig
   })
@@ -120,24 +150,29 @@ function setupIPCHandlers() {
  */
 function initializeApp() {
   try {
+    // Set app user model id for Windows notifications
+    if (process.platform === 'win32') {
+      app.setAppUserModelId('Portal Net')
+    }
+
     // Initialize configuration storage
     initializeConfigStore()
-    
+
     // Load saved configuration
     currentConfig = loadConfigFromStore()
-    
+
     // Setup IPC handlers for renderer communication
     setupIPCHandlers()
-    
+
     // Initialize auto-launch functionality
     initializeAutoLaunch(app)
-    
+
     // Create main window
     createWindow()
-    
+
     // Create system tray
     createTray()
-    
+
     console.log('Application initialized successfully')
   } catch (error) {
     handleError(error, 'Application Initialization')
@@ -174,3 +209,7 @@ app.on('will-quit', () => {
     app.releaseSingleInstanceLock()
   }
 })
+
+module.exports = {
+  showNotification
+}

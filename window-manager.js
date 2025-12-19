@@ -27,6 +27,9 @@ function createWindow() {
 
   mainWindow.loadFile('renderer/index.html')
 
+  // Remove the default menu bar
+  mainWindow.removeMenu()
+
   // Handle window close event - minimize to tray instead of quitting
   // This provides a better user experience by keeping the app running in background
   mainWindow.on('close', (event) => {
@@ -36,6 +39,10 @@ function createWindow() {
     } else {
       event.preventDefault()
       mainWindow.hide()
+
+      // Show notification when minimized to tray
+      const { showNotification } = require('./main')
+      showNotification('Portal Net', 'Application minimized to system tray')
     }
   })
 }
