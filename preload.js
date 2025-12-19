@@ -8,7 +8,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setConfig: (config) => ipcRenderer.invoke('set-config', config),
   getConfig: () => ipcRenderer.invoke('get-config'),
   onFileSorted: (callback) => ipcRenderer.on('file-sorted', callback),
-  getPath: (name) => ipcRenderer.invoke('get-path', name)
+  getPath: (name) => ipcRenderer.invoke('get-path', name),
+  exportConfig: () => ipcRenderer.invoke('export-config'),
+  importConfig: () => ipcRenderer.invoke('import-config')
 })
 
 // Expose dialog API for folder selection

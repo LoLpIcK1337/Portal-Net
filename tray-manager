@@ -42,7 +42,7 @@ function createTray() {
       }
     ])
 
-    tray.setToolTip('File Sorter')
+    tray.setToolTip('Portal Net')
     tray.setContextMenu(contextMenu)
 
     // Handle tray click - toggle window visibility

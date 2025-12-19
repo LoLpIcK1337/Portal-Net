@@ -40,10 +40,11 @@
         <div class="help-box">
           <h4>How to add formats:</h4>
           <ul>
-            <li>Use individual input fields below to add one format at a time</li>
+            <li>Use the input field below to add one format at a time</li>
             <li>Formats should start with a dot (e.g., <code>.js</code>, <code>.py</code>)</li>
             <li>Click "Add Format" to add it to the list</li>
             <li>Remove formats by clicking the × button next to each format</li>
+            <li>Multiple formats can be added to one category</li>
           </ul>
         </div>
         
@@ -119,6 +120,15 @@
           <input type="checkbox" id="sortExistingFilesCheckbox">
           <span class="setting-label">Sort existing files on startup</span>
         </label>
+      </div>
+    </div>
+
+    <div class="config-management">
+      <h3>Configuration Management</h3>
+      <p class="help-text">Export your configuration to share settings or import configurations from other users.</p>
+      <div class="config-actions">
+        <button id="exportConfigBtn" class="export-config-btn">Export Configuration</button>
+        <button id="importConfigBtn" class="import-config-btn">Import Configuration</button>
       </div>
     </div>
   </div>

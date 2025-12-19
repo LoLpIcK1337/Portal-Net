@@ -518,36 +518,42 @@ function initializeFormatManagement() {
 function addFormatToList() {
   const formatInput = document.getElementById('formatInput')
   let format = formatInput.value.trim().toLowerCase()
-  
+
   if (!format) {
     showStatusMessage('Please enter a file format', true)
     return
   }
-  
+
+  // Check for comma-separated formats or spaces
+  if (format.includes(',') || format.includes(' ')) {
+    showStatusMessage('Please enter only one format (no commas or spaces allowed)', true)
+    return
+  }
+
   // Add dot if not present
   if (!format.startsWith('.')) {
     format = '.' + format
   }
-  
+
   // Validate format
   if (format.length < 2) {
     showStatusMessage('Format must be at least 2 characters', true)
     return
   }
-  
+
   // Check if format already exists
   if (window.currentFormats.includes(format)) {
     showStatusMessage('This format is already added', true)
     return
   }
-  
+
   // Add to formats list
   window.currentFormats.push(format)
-  
+
   // Clear input and update display
   formatInput.value = ''
   updateFormatsList()
-  
+
   showStatusMessage(`Format "${format}" added`)
 }
 
@@ -747,7 +753,7 @@ function saveCategoryEdit(categoryId) {
       ext = '.' + ext
     }
     return ext.toLowerCase()
-  }).filter(ext => ext.length > 1)
+  }).filter(ext => ext.length > 1 && !ext.includes(' ') && !ext.includes(','))
 
   if (extensions.length === 0) {
     showStatusMessage('Please provide valid file formats', true)
@@ -810,8 +816,20 @@ function addFormatToCategory(categoryId) {
   
   if (formatInput) {
     let newFormat = formatInput.trim().toLowerCase()
+
+    // Check for comma-separated formats or spaces
+    if (newFormat.includes(',') || newFormat.includes(' ')) {
+      showStatusMessage('Please enter only one format (no commas or spaces allowed)', true)
+      return
+    }
+
     if (!newFormat.startsWith('.')) {
       newFormat = '.' + newFormat
+    }
+
+    if (newFormat.length < 2) {
+      showStatusMessage('Please provide a valid file format', true)
+      return
     }
 
     if (!category.extensions.includes(newFormat)) {

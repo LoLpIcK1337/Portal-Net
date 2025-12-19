@@ -2,9 +2,9 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('path')
 
 // Import all modules
-const { createWindow } = require('./window-manager')
+const { createWindow, getMainWindow, showMainWindow } = require('./window-manager')
 const { createTray } = require('./tray-manager')
-const { initializeConfigStore, loadConfigFromStore, saveConfigToStore } = require('./config-manager')
+const { initializeConfigStore, loadConfigFromStore, saveConfigToStore, exportConfig, importConfig } = require('./config-manager')
 const { handleError } = require('./error-handler')
 const { startFileWatcher } = require('./file-operations')
 const { initializeAutoLaunch, setupAutoLaunchIPC } = require('./auto-launch')
@@ -17,6 +17,29 @@ let currentConfig = {
   sortExistingFiles: false,
   theme: 'light',
   customCategories: []
+}
+
+/**
+ * Single Instance Lock - Prevents multiple instances of the application
+ */
+const gotTheLock = app.requestSingleInstanceLock()
+
+if (!gotTheLock) {
+  // Another instance is already running, quit this one
+  app.quit()
+} else {
+  // This is the first instance, handle second instance events
+  app.on('second-instance', (event, argv, cwd) => {
+    // Someone tried to run a second instance, focus our window instead
+    const mainWindow = getMainWindow()
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore()
+      }
+      mainWindow.focus()
+      showMainWindow()
+    }
+  })
 }
 
 /**
@@ -61,6 +84,33 @@ function setupIPCHandlers() {
   // System path functionality for accessing standard directories
   ipcMain.handle('get-path', (event, name) => {
     return app.getPath(name)
+  })
+
+  // Configuration import and export functionality
+  ipcMain.handle('export-config', async () => {
+    const mainWindow = getMainWindow()
+    if (!mainWindow) {
+      console.error('Main window not available for export dialog')
+      return false
+    }
+    return await exportConfig(mainWindow)
+  })
+
+  ipcMain.handle('import-config', async () => {
+    const mainWindow = getMainWindow()
+    if (!mainWindow) {
+      console.error('Main window not available for import dialog')
+      return null
+    }
+    
+    const importedConfig = await importConfig(mainWindow)
+    if (importedConfig) {
+      // Update current config and save it
+      currentConfig = importedConfig
+      saveConfigToStore(currentConfig)
+      startFileWatcher(currentConfig)
+    }
+    return importedConfig
   })
 }
 
@@ -115,4 +165,12 @@ app.on('window-all-closed', () => {
 // Handle app quitting
 app.on('before-quit', () => {
   app.quitting = true
+})
+
+// Release single instance lock when app quits
+app.on('will-quit', () => {
+  // Release the single instance lock
+  if (gotTheLock) {
+    app.releaseSingleInstanceLock()
+  }
 })

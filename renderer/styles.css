@@ -28,6 +28,52 @@ body[data-theme="dark"] {
   --input-border: #404040;
 }
 
+/* Configuration Management Styles */
+.config-management {
+  margin-top: 8px;
+  padding: 15px;
+  background-color: var(--container-bg);
+  border-radius: 4px;
+  font-size: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.config-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.export-config-btn,
+.import-config-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.export-config-btn {
+  background-color: var(--accent-bg);
+  color: white;
+}
+
+.export-config-btn:hover {
+  background-color: var(--accent-hover);
+}
+
+.import-config-btn {
+  background-color: var(--button-bg);
+  color: white;
+}
+
+.import-config-btn:hover {
+  background-color: var(--button-hover);
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;

@@ -63,6 +63,7 @@ Main Destination Folder (e.g., "E:\Portal Net Files")
 - System tray integration with logo.jpg icon
 - Auto-startup on system boot
 - Configuration persistence (including theme preference and folder settings)
+- **Configuration Import/Export**: Share your settings (excluding system-specific folder paths) or import configurations from other users
 - Real-time status updates
 - Default folder override prevention (respects existing configurations)
 
@@ -85,9 +86,10 @@ npm start
 3. Choose your preferred theme (Dark/Light)
 4. Choose which file categories to organize (checkboxes)
 5. **Manage Custom Categories**: Create, edit, or remove custom file organization rules
-6. Click "Start Automatic Sorting"
-7. Files will be automatically sorted as they appear
-8. Custom categories provide personalized file organization beyond predefined categories
+6. **Configuration Management**: Export your settings to share or import configurations from other users
+7. Click "Start Automatic Sorting"
+8. Files will be automatically sorted as they appear
+9. Custom categories provide personalized file organization beyond predefined categories
 
 ## Building for Production
 
@@ -127,3 +129,7 @@ The application now uses a modular architecture with separate components for imp
 - Configuration properly handles theme, folder paths, sortExistingFiles, and custom categories settings
 - Custom categories are stored persistently and should survive application restarts
 - For issues with custom categories, check the category format and target folder paths
+- Configuration import/export files should be valid JSON format with proper structure
+- Imported configurations are validated before being applied to prevent errors
+- Exported configurations exclude system-specific folder paths for cross-computer compatibility
+- After importing a configuration, you may need to set your source and destination folders manually
